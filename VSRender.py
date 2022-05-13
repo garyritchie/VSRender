@@ -144,10 +144,9 @@ def splitparts(nparts, tool):
 	
 	if platform.system() == 'Windows':
 		shscript = "#powershell\n\
-Read-Host -Prompt \"" + blendexe + "\"\n\
-x=\"" + blendfilepath + " -x 1 -s %&#1 -e %&#2 -a\"\n\
-Read-Host -Prompt $x\n\
-eval \"" + blendexe + "\" -b \"$x\"\n\
+$exe = '" + blendexe + "'\n\
+$cmd = '-noaudio', '--background', '--factory-startup', '" + blendfilepath + "', '-x', '1', '-s', '%&#1', '-e', '%&#2', '-a'\n\
+& $exe $cmd\n\
 Read-Host -Prompt \"VSE Render : Part %&#3 Render Done\""
 	else:
 		shscript = "#!/bin/bash\n\
@@ -183,6 +182,12 @@ def startrender(term, ttype, tcmd):
 	global sframes
 	global eframes
 
+	# sorry, python newb...
+	if platform.system() == 'Windows':
+		ext = ".ps1"
+	else:
+		ext = ".sh"
+	
 	outpath = getrenderoutputpath()
 	if outpath == None:
 		return
@@ -202,10 +207,12 @@ def startrender(term, ttype, tcmd):
 			if ttype=="EM":
 				shstr = "x-terminal-emulator --title=Rendering_Section_" + ranges[n] + " --command=\"bash -c './" + ranges[n] + ".sh;'\""
 			if ttype=="SB":
-				shstr = tcmd.replace("$scriptname", ranges[n] + ".sh")
+				shstr = tcmd.replace("$scriptname", ranges[n] + ext)
 				pc(shstr)
 				#shstr = gnome-terminal --command="bash -c './$scriptname;'" # This works for example
-			
+			# the following Term Cmd: only does executes the first ps1...
+			# \& powershell .\$scriptname
+
 			print(os.getcwd())
 			os.chdir(outpath)
 			print(os.getcwd())
