@@ -6,7 +6,7 @@ bl_info = {
 	"name": "VS Render",
 	"description": "Renders the video sequencer in parallel utilizing all cores",
 	"author": "Oormi Creations",
-	"version": (0, 3, 0),
+	"version": (0, 3, 1),
 	"blender": (2, 80, 0),
 	"location": "Video Sequencer > VS Render",
 	"warning": "", # used for warning icon and text in addons panel
@@ -75,9 +75,10 @@ def getrenderoutputpath():
 	if outpath == "/tmp/" or outpath == "":
 		ShowMessageBox("Please set an Ouput path in Properties panel > Output Properties > Output")
 		return None
-	if outpath[-1] != "/":
-		ShowMessageBox("Please set an Ouput path in Properties panel > Output Properties > Output and ensure that the path exists and that there is no file name prefix in the end of the path (It should have / as last character)")
-		return None
+	## I need custom padding, e.g. ######
+	# if outpath[-1] != "/":
+	# 	ShowMessageBox("Please set an Ouput path in Properties panel > Output Properties > Output and ensure that the path exists and that there is no file name prefix in the end of the path (It should have / as last character)")
+	# 	return None
 	
 	if outpath.find("//") >=0:
 		outpath = bpy.path.abspath(outpath)
@@ -89,9 +90,10 @@ def splitparts(nparts, tool):
 	outpath = getrenderoutputpath()
 	if outpath == None:
 		return
-		
-	fstart = bpy.context.scene.frame_start
-	fend = bpy.context.scene.frame_end
+	
+	# bpy.types.Scene.use_preview_range = True
+	fstart =  bpy.context.scene.frame_preview_start
+	fend =  bpy.context.scene.frame_preview_end
 	nframes = fend - fstart + 1
 	printconsole(nframes, "nframes")
 	
