@@ -6,7 +6,7 @@ bl_info = {
 	"name": "VS Render",
 	"description": "Renders the video sequencer in parallel utilizing all cores",
 	"author": "Oormi Creations",
-	"version": (0, 3, 1),
+	"version": (0, 3, 2),
 	"blender": (2, 80, 0),
 	"location": "Video Sequencer > VS Render",
 	"warning": "", # used for warning icon and text in addons panel
@@ -137,7 +137,7 @@ def splitparts(nparts, tool):
 	printconsole(ranges, "Ranges") 
 	
 	#save sh scripts
-	#blendfilename = bpy.path.basename(bpy.context.blend_data.filepath)
+	blendfilename = bpy.path.basename(bpy.context.blend_data.filepath)
 	blendfilepath = bpy.context.blend_data.filepath
 	
 	blendexe = bpy.app.binary_path
@@ -146,6 +146,7 @@ def splitparts(nparts, tool):
 	
 	if platform.system() == 'Windows':
 		shscript = "#powershell\n\
+$host.UI.RawUI.WindowTitle = '"+ blendfilename + " " + rangestr + "'\n\
 $exe = '" + blendexe + "'\n\
 $cmd = '-noaudio', '--background', '--factory-startup', '" + blendfilepath + "', '-x', '1', '-s', '%&#1', '-e', '%&#2', '-a'\n\
 & $exe $cmd\n\
