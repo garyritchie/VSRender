@@ -154,7 +154,7 @@ Read-Host -Prompt \"VSE Render : Part %&#3 Render Done\""
 	else:
 		shscript = "#!/bin/bash\n\
 echo \"" + blendexe + "\"\n\
-x=\"" + blendfilepath + " -x 1 -s %&#1 -e %&#2 -a\"\n\
+x=\"" + blendfilepath + " -noaudio --background --factory-startup -x 1 -s %&#1 -e %&#2 -a\"\n\
 echo $x\n\
 eval \"" + blendexe + "\" -b \"$x\"\n\
 echo \"VSE Render : Part %&#3 Render Done\""
